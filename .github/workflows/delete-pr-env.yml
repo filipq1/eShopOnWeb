@@ -1,0 +1,41 @@
+name: Delete PR Environment when PR is closed
+
+on:
+  pull_request:
+    types: [closed]
+
+concurrency: 
+  group: ci-${{ github.event.number }}
+  cancel-in-progress: true
+
+env:
+  WEBAPP_NAME: agh-2024-webapp-1
+  RESOURCE_GROUP: agh-2024-test-1
+  SLOT_NAME: pr-${{ github.event.number }}
+
+jobs:
+  delete-slot:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Login to Azure
+      uses: Azure/login@v2
+      with:
+        client-id: ${{ secrets.WEB_APP_CLIENT_ID }}
+        tenant-id: ${{ secrets.WEB_APP_DIRECTORY_ID }}
+        subscription-id: ${{ secrets.WEB_APP_SUBSCRIPTION_ID }} 
+        enable-AzPSSession: true
+    
+    - name: Delete slot on staging site
+      run: az webapp deployment slot delete --resource-group $RESOURCE_GROUP  --name $WEBAPP_NAME --slot $SLOT_NAME
+
+  delete-deployment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Delete Deployment Environment
+        uses: strumwolf/delete-deployment-environment@v2.0.1
+        with:
+          environment: "PR #${{ github.event.number }}"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          onlyRemoveDeployments: true
