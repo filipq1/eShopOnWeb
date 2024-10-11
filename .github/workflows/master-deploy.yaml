@@ -67,12 +67,6 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: eShopOnWeb
-
-    - name: list-files
-      run: |
-        ls
-        ls ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-        ls ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/eShopOnWeb
     
     - name: Deploy to staging environment
       uses: azure/webapps-deploy@v3
@@ -80,7 +74,7 @@ jobs:
       with: 
         app-name: ${{ env.WEBAPP_NAME }}
         slot-name:  ${{ env.SLOT_NAME }}
-        package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/eShopOnWeb'
+        package: '.'
 
   release-to-prod:
     name: Release to prod
