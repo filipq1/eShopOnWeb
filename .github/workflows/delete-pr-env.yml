@@ -26,7 +26,7 @@ jobs:
         subscription-id: ${{ secrets.WEB_APP_SUBSCRIPTION_ID }} 
         enable-AzPSSession: true
     
-    - name: Delete slot on staging site
+    - name: Delete testing slot
       run: az webapp deployment slot delete --resource-group $RESOURCE_GROUP  --name $WEBAPP_NAME --slot $SLOT_NAME
 
   delete-deployment:
