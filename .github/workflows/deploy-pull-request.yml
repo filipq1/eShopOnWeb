@@ -11,6 +11,7 @@ env:
   WEBAPP_NAME: agh-2024-webapp-1
   RESOURCE_GROUP: agh-2024-test-1
   SLOT_NAME: pr-${{ github.event.number }}
+  AZURE_WEBAPP_PACKAGE_PATH: './publish'
 
 permissions:
   id-token: write
@@ -28,7 +29,7 @@ jobs:
         dotnet-version: '6.0.x'
         include-prerelease: false
 
-    - name: Build with dotnet
+    - name: Build with Dotnet
       run: dotnet build ./eShopOnWeb.sln --configuration Release
 
     - name: Run Unit Tests
@@ -47,7 +48,7 @@ jobs:
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/eShopOnWeb
         
   set-up-test-env:
-    name: Create test env
+    name: Create testing environment
     runs-on: ubuntu-latest
 
     steps:
@@ -59,16 +60,13 @@ jobs:
         subscription-id: ${{ secrets.WEB_APP_SUBSCRIPTION_ID }} 
         enable-AzPSSession: true
 
-    - name: Create slot on staging site
+    - name: Create slot for testing purposes
       run: az webapp deployment slot create --resource-group $RESOURCE_GROUP  --name $WEBAPP_NAME --slot $SLOT_NAME
 
   deploy:
-    name: Deploy to test env
+    name: Deploy to testing environment env
     runs-on: ubuntu-latest
     needs: [build, set-up-test-env]
-    environment:
-      name: "PR #${{ github.event.number }}"
-      url: ${{ steps.deploy-to-test.outputs.webapp-url }}
     permissions:
       pull-requests: write
       id-token: write
@@ -79,6 +77,14 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: eShopOnWeb
+
+    - name: Login to Azure
+      uses: Azure/login@v2
+      with:
+        client-id: ${{ secrets.WEB_APP_CLIENT_ID }}
+        tenant-id: ${{ secrets.WEB_APP_DIRECTORY_ID }}
+        subscription-id: ${{ secrets.WEB_APP_SUBSCRIPTION_ID }} 
+        enable-AzPSSession: true
 
     - name: Deploy to testing environment
       uses: azure/webapps-deploy@v3
