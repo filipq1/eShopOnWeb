@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  WEBAPP_NAME: agh-web-app-2024-1
+  WEBAPP_NAME: agh-2024-webapp-1
   RESOURCE_GROUP: agh-2024-test-1
   SLOT_NAME: staging
 
