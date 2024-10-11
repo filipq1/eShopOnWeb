@@ -11,6 +11,7 @@ env:
   WEBAPP_NAME: agh-2024-webapp-1
   RESOURCE_GROUP: agh-2024-test-1
   SLOT_NAME: pr-${{ github.event.number }}
+  AZURE_WEBAPP_PACKAGE_PATH: './publish'
 
 permissions:
   id-token: write
