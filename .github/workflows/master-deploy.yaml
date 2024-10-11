@@ -1,4 +1,4 @@
-name: Release to prod
+name: Deploy To Production with Staging Check
 
 on:
   push:
@@ -32,8 +32,8 @@ jobs:
     - name: Run Functional Tests
       run: dotnet test ./tests/FunctionalTests/FunctionalTests.csproj --configuration Release
 
-    - name: dotnet publish
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/eShopOnWeb
+    - name: Publish Build Artifacts
+      run: dotnet publish ./src/Web/Web.csproj -c Release -o ${{env.DOTNET_ROOT}}/eShopOnWeb
 
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v3
