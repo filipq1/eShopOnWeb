@@ -10,6 +10,7 @@ env:
   WEBAPP_NAME: agh-2024-webapp-1
   RESOURCE_GROUP: agh-2024-test-1
   SLOT_NAME: staging
+  AZURE_WEBAPP_PACKAGE_PATH: './publish'
 
 permissions:
   id-token: write
@@ -37,7 +38,7 @@ jobs:
       run: dotnet test ./tests/FunctionalTests/FunctionalTests.csproj --configuration Release
 
     - name: Publish Build Artifacts
-      run: dotnet publish ./src/Web/Web.csproj -c Release -o ${{env.DOTNET_ROOT}}/eShopOnWeb
+      run: dotnet publish ./src/Web/Web.csproj -c Release -o ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/eShopOnWeb
 
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v4
@@ -66,6 +67,12 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: eShopOnWeb
+
+    - name: list-files
+      run: |
+        ls
+        ls ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        ls ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/eShopOnWeb
     
     - name: Deploy to staging environment
       uses: azure/webapps-deploy@v3
@@ -73,7 +80,7 @@ jobs:
       with: 
         app-name: ${{ env.WEBAPP_NAME }}
         slot-name:  ${{ env.SLOT_NAME }}
-        package: '${{env.DOTNET_ROOT}}/eShopOnWeb'
+        package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/eShopOnWeb'
 
   release-to-prod:
     name: Release to prod
