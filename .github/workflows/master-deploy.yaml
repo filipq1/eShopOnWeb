@@ -3,13 +3,17 @@ name: Deploy To Production with Staging Check
 on:
   push:
     branches:
-    - main
+    - master
   workflow_dispatch:
 
 env:
   WEBAPP_NAME: agh-web-app-2024-1
   RESOURCE_GROUP: agh-2024-test-1
   SLOT_NAME: staging
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   build:
