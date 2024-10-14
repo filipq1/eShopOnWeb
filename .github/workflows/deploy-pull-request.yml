@@ -63,6 +63,14 @@ jobs:
     - name: Create slot for testing purposes
       run: az webapp deployment slot create --resource-group $RESOURCE_GROUP  --name $WEBAPP_NAME --slot $SLOT_NAME
 
+    - name: Set Envrionment Variable
+      uses: azure/appservice-settings@v1
+      with:
+        app-name: ${{ env.WEBAPP_NAME }}
+        mask-inputs: false
+        slot-name: ${{ env.SLOT_NAME }}
+        app-settings-json: '[{ "name": "ASPNETCORE_ENVIRONMENT, "value": "development", "slotSetting": true }]'
+
   deploy:
     name: Deploy to testing environment env
     runs-on: ubuntu-latest
