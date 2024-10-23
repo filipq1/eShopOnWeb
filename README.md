@@ -98,7 +98,7 @@ You can also run the samples in Docker (see below).
 
 ## Running the sample using Docker
 
-You can run the Web sample by running these commands from the root folder (where the .sln file is located):
+You can run the Web sample by running these commands from the root folder (where the .sln file is located): 
 
 ```
 docker-compose build
