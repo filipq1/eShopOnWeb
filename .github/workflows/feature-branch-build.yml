@@ -1,0 +1,27 @@
+name: Build application on feature branch
+
+on:
+  push:
+    branches-ignore:
+    - master
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+        include-prerelease: false
+
+    - name: Build with dotnet
+      run: dotnet build ./eShopOnWeb.sln --configuration Release
+
+    - name: Run Unit Tests
+      run: dotnet test ./tests/UnitTests/UnitTests.csproj --configuration Release
+
+    - name: Run Functional Tests
+      run: dotnet test ./tests/FunctionalTests/FunctionalTests.csproj --configuration Release
