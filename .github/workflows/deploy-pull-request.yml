@@ -12,8 +12,8 @@ concurrency: ci-${{ github.event.number }}
 
 # Ustawienie zmiennych środowiskowych wykorzystywanych podczas wykonywania akcji
 env:
-  WEBAPP_NAME: web-app-lab-2024-agh
-  RESOURCE_GROUP: lab2024-agh
+  WEBAPP_NAME: <nazwa stworzonej web app w Azure>
+  RESOURCE_GROUP: <nazwa resource grupy w Azure, w której znajduje się web app>
   SLOT_NAME: pr-${{ github.event.number }}
   AZURE_WEBAPP_PACKAGE_PATH: './publish'
 
@@ -62,6 +62,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Login to Azure
+      uses: Azure/login@v2
+      with:
+        client-id: ${{ secrets.WEB_APP_CLIENT_ID }}
+        tenant-id: ${{ secrets.WEB_APP_DIRECTORY_ID }}
+        subscription-id: ${{ secrets.WEB_APP_SUBSCRIPTION_ID }} 
+        enable-AzPSSession: true
+
 # Stworzenie testowego deployment slotu. Nazwa odpowiada numerowi pull requestu, który jest unikalny
     - name: Create slot for testing purposes
       run: az webapp deployment slot create --resource-group $RESOURCE_GROUP  --name $WEBAPP_NAME --slot $SLOT_NAME
@@ -107,7 +115,6 @@ jobs:
       with: 
         app-name: ${{ env.WEBAPP_NAME }}
         slot-name:  ${{ env.SLOT_NAME }}
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE  }}
         package: '.'
 
 #  Wrzucenie linku z adresem URL aplikacji do pull requestu
