@@ -63,16 +63,7 @@ jobs:
       name: 'Staging'
       url: ${{ steps.deploy-to-stage.outputs.webapp-url }}
 
-#Zalogowanie do Azure przy użyciu Federated Credentials
     steps:
-    - name: Login to Azure
-      uses: Azure/login@v2
-      with:
-        client-id: ${{ secrets.WEB_APP_CLIENT_ID }}
-        tenant-id: ${{ secrets.WEB_APP_DIRECTORY_ID }}
-        subscription-id: ${{ secrets.WEB_APP_SUBSCRIPTION_ID }} 
-        enable-AzPSSession: true
-
 # Pobranie paczki z aplikacją
     - name: Download artifact from build job
       uses: actions/download-artifact@v4
@@ -100,14 +91,13 @@ jobs:
 
 # Ponowne zalogowanie do Azure
     steps:
-    - name: Login to Azure
-      uses: Azure/login@v2
-      with:
-        client-id: ${{ secrets.WEB_APP_CLIENT_ID }}
-        tenant-id: ${{ secrets.WEB_APP_DIRECTORY_ID }}
-        subscription-id: ${{ secrets.WEB_APP_SUBSCRIPTION_ID }} 
-        enable-AzPSSession: true
 
 # Podmiana slotu staginowego, na który wcześniej została zdeployowana aplikacja na slot produkcyjny
-    - name: Swap slots
-      run: az webapp deployment slot swap -s ${{ env.SLOT_NAME }} -n ${{ env.WEBAPP_NAME }} -g ${{ env.RESOURCE_GROUP }}
+    - name: Deploy to staging environment
+      uses: azure/webapps-deploy@v3
+      id: deploy-to-stage
+      with: 
+        app-name: ${{ env.WEBAPP_NAME }}
+        slot-name:  "Production"
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE  }}
+        package: '.'
