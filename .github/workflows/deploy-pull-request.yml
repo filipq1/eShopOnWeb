@@ -62,14 +62,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Login to Azure
-      uses: Azure/login@v2
-      with:
-        client-id: ${{ secrets.WEB_APP_CLIENT_ID }}
-        tenant-id: ${{ secrets.WEB_APP_DIRECTORY_ID }}
-        subscription-id: ${{ secrets.WEB_APP_SUBSCRIPTION_ID }} 
-        enable-AzPSSession: true
-
 # Stworzenie testowego deployment slotu. Nazwa odpowiada numerowi pull requestu, który jest unikalny
     - name: Create slot for testing purposes
       run: az webapp deployment slot create --resource-group $RESOURCE_GROUP  --name $WEBAPP_NAME --slot $SLOT_NAME
