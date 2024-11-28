@@ -14,8 +14,8 @@ concurrency:
 
 # Ustawienie zmiennych środowiskowych używanych podczas akcji
 env:
-  WEBAPP_NAME: web-app-lab-2024-agh
-  RESOURCE_GROUP: lab2024-agh
+  WEBAPP_NAME: lab-agh-2024
+  RESOURCE_GROUP: lab-agh-2024
   SLOT_NAME: pr-${{ github.event.number }}
 
 # Permisje pozwalające na zalogowanie do Azure przy pomocy federated credentials
