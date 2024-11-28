@@ -10,8 +10,8 @@ on:
 
 # Ustawienie zmiennych środowiskowych używanych w trakcie akcji
 env:
-  WEBAPP_NAME: <nazwa stworzonej web app w Azure>
-  RESOURCE_GROUP: <nazwa resource grupy w Azure, w której znajduje się web app>
+  WEBAPP_NAME: lab-agh-2024
+  RESOURCE_GROUP: lab-agh-2024
   SLOT_NAME: staging
   AZURE_WEBAPP_PACKAGE_PATH: './publish'
 
